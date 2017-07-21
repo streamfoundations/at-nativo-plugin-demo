@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <title>videojs-wt-nativo-plugin Demo</title>
-  <link href="http://vjs.zencdn.net/5.4.6/video-js.css" rel="stylesheet">
+  <link href="//vjs.zencdn.net/5.4.6/video-js.css" rel="stylesheet">
   <link href="vendor/videojs.vast.vpaid.css" rel="stylesheet">
-  <script src="http://vjs.zencdn.net/5.4.6/video.js"></script>
+  <script src="//vjs.zencdn.net/5.4.6/video.js"></script>
   <style>
     .video-js {
       width: 600px;
@@ -20,24 +20,29 @@
   </video>
 
   <script src="vendor/videojs_5.vast.vpaid.js"></script>
-  <script src="dist/wt.nativo-plugin.min.js"></script>
+  <script src="https://cdn.watchingthat.com/wt.nativo-plugin.min.js"></script>
   <script>
     (function(window, videojs) {
+      videojs.plugin('ads-setup', function(opts) {
+          var player = this;
+          var adsCancelTimeout = 3000;
+
+          // call our plugin
+          player.wtAdTracerNativoPlugin({
+            clientId: '583d979ec441c4000419d6bf',
+            clientSecret: 'sjFHYofDdoB2CUDivyEJWAXvx28yf2EK',
+            adTagUrl: 'https://req.tidaltv.com/ppm.ashx?logs=0&mt=1&pid=1&fmid=521675&xf=42&ap=0&rand=[wt_timestamp]&refUrl=[Ref_URL]',
+          });
+
+          // call the vast-vpaid plugin
+          player.vastClient({
+            adTagUrl: 'https://req.tidaltv.com/ppm.ashx?logs=0&mt=1&pid=1&fmid=521675&xf=42&ap=0&rand=[wt_timestamp]&refUrl=[Ref_URL]',
+            adsEnabled: true,
+          });
+      });
       // create the player
-      const player = window.player = videojs('default');
+      // const player = window.player = videojs('default');
 
-      // call our plugin
-      player.wtAdTracerNativoPlugin({
-        clientId: '583d979ec441c4000419d6bf',
-        clientSecret: 'sjFHYofDdoB2CUDivyEJWAXvx28yf2EK',
-        adTagUrl: 'https://req.tidaltv.com/ppm.ashx?logs=0&mt=1&pid=1&fmid=521675&xf=42&ap=0&rand=[wt_timestamp]&refUrl=[Ref_URL]',
-      });
-
-      // call the vast-vpaid plugin
-      player.vastClient({
-        adTagUrl: 'https://req.tidaltv.com/ppm.ashx?logs=0&mt=1&pid=1&fmid=521675&xf=42&ap=0&rand=[wt_timestamp]&refUrl=[Ref_URL]',
-        adsEnabled: true,
-      });
     }(window, window.videojs));
   </script>
 </body>
