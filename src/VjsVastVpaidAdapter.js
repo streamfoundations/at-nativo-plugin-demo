@@ -89,7 +89,15 @@ class VjsVastVpaidWrapper {
   };
 
   onAdError(cb) {
-    this.player.on('vast.adError', cb);
+    this.player.on('vast.adError', this._handleAdError(cb));
+  }
+
+  _handleAdError = (cb) => (e) => {
+    if (e.type === 'vast.adError' && e.error && e.error.code) {
+      cb(e.error.code, e);
+    } else {
+      utils.log('onAdError event does not look like an vast.adError event', e);
+    }
   }
 }
 

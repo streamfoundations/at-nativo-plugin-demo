@@ -14,7 +14,7 @@
   </style>
 </head>
 <body>
-  <video id="default" class="video-js vjs-default-skin" controls>
+  <video id="ntvVideo" class="video-js vjs-default-skin" controls>
     <source src="//vjs.zencdn.net/v/oceans.mp4" type='video/mp4'>
     <source src="//vjs.zencdn.net/v/oceans.webm" type='video/webm'>
   </video>
@@ -23,20 +23,21 @@
   <script src="https://cdn.watchingthat.com/wt.nativo-plugin.min.js"></script>
   <script>
     window.addEventListener('load', () => {
-      // create the player
-      const player = videojs('default');
+      const player = window.player = videojs('ntvVideo');
 
-      // call our plugin
-      player.wtAdTracerNativoPlugin({
-        clientId: '583d979ec441c4000419d6bf',
-        clientSecret: 'sjFHYofDdoB2CUDivyEJWAXvx28yf2EK',
-        adTagUrl: 'https://req.tidaltv.com/ppm.ashx?logs=0&mt=1&pid=1&fmid=521675&xf=42&ap=0&rand=[wt_timestamp]&refUrl=[Ref_URL]',
-      });
+      player.ready(() => {
+        // call our plugin
+        player.wtAdTracerNativoPlugin({
+          clientId: '583d979ec441c4000419d6bf',
+          clientSecret: 'sjFHYofDdoB2CUDivyEJWAXvx28yf2EK',
+          adTagUrl: 'https://req.tidaltv.com/ppm.ashx?logs=0&mt=1&pid=1&fmid=521675&xf=42&ap=0&rand=[wt_timestamp]&refUrl=[Ref_URL]',
+        });
 
-      // call the vast-vpaid plugin
-      player.vastClient({
-        adTagUrl: 'https://req.tidaltv.com/ppm.ashx?logs=0&mt=1&pid=1&fmid=521675&xf=42&ap=0&rand=[wt_timestamp]&refUrl=[Ref_URL]',
-        adsEnabled: true,
+        // call the vast-vpaid plugin
+        player.vastClient({
+          adTagUrl: 'https://req.tidaltv.com/ppm.ashx?logs=0&mt=1&pid=1&fmid=521675&xf=42&ap=0&rand=[wt_timestamp]&refUrl=[Ref_URL]',
+          adsEnabled: true,
+        });
       });
     });
   </script>

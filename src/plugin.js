@@ -1,6 +1,6 @@
 import { PluginCore } from '@watchingthat/tracy-plugin-common';
 import { version as VERSION } from '../package.json';
-import VjsVastVpaidWrapper from './VjsVastVpaidWrapper';
+import VjsVastVpaidAdapter from './VjsVastVpaidAdapter';
 
 // Default options for the plugin.
 const defaults = {};
@@ -22,10 +22,10 @@ const defaults = {};
  *           A plain object containing options for the plugin.
  */
 const onPlayerReady = (player, options = {}) => {
-  let debug = false;
+  let debug = 0;
 
   try {
-    debug = !!localStorage.getItem('wtDebug');
+    debug = localStorage.getItem('wtDebug') || 0;
   } catch (err) {
     // do nothing;
   }
@@ -33,8 +33,8 @@ const onPlayerReady = (player, options = {}) => {
   if (typeof player.vast !== 'undefined') {
     debug = options.wtDebug || debug;
 
-    const adManagerWrapper = new VjsVastVpaidWrapper(player, options);
-    const wtat = new PluginCore(player, adManagerWrapper, options, options.wtUrl || window.wtUrl, debug);
+    const adManagerAdapter = new VjsVastVpaidAdapter(player, options);
+    const wtat = new PluginCore(player, adManagerAdapter, options, options.wtUrl || window.wtUrl, debug);
 
     wtat.start();
     if (debug) {
