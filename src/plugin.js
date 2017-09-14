@@ -1,6 +1,5 @@
-import { PluginCore } from '@watchingthat/tracy-plugin-common';
-import { version as VERSION } from '../package.json';
-import VjsVastVpaidAdapter from './VjsVastVpaidAdapter';
+import { version } from '../package.json';
+import VjsVastVpaidPlugin from './VjsVastVpaidPlugin';
 
 // Default options for the plugin.
 const defaults = {};
@@ -22,24 +21,10 @@ const defaults = {};
  *           A plain object containing options for the plugin.
  */
 const onPlayerReady = (player, options = {}) => {
-  let debug = 0;
-
-  try {
-    debug = localStorage.getItem('wtDebug') || 0;
-  } catch (err) {
-    // do nothing;
-  }
-
   if (typeof player.vast !== 'undefined') {
-    debug = options.wtDebug || debug;
+    player.wtat = new VjsVastVpaidPlugin(player, options);
+    player.wtat.start();
 
-    const adManagerAdapter = new VjsVastVpaidAdapter(player, options);
-    const wtat = new PluginCore(player, adManagerAdapter, options, options.wtUrl || window.wtUrl, debug);
-
-    wtat.start();
-    if (debug) {
-      window.wtat = wtat;
-    }
     player.addClass('vjs-wt-nativo-plugin');
   }
 };
@@ -58,7 +43,15 @@ const onPlayerReady = (player, options = {}) => {
  */
 const wtAdTracerNativoPlugin = function wtAdTracerNativoPlugin(options) {
   this.ready(() => {
-    onPlayerReady(this, videojs.mergeOptions(defaults, options, { wtVersion: `ntv-${VERSION}` }));
+    const localOpts = { v: version };
+
+    try {
+      localOpts.debug = localStorage.getItem('wtDebug');
+      localOpts.sendDebug = localStorage.getItem('wtSendDebug');
+    } catch (err) {
+      // do nothing;
+    }
+    onPlayerReady(this, videojs.mergeOptions(defaults, options, localOpts));
   });
 };
 
@@ -69,6 +62,6 @@ const registerPlugin = window.videojs.registerPlugin || window.videojs.plugin;
 registerPlugin('wtAdTracerNativoPlugin', wtAdTracerNativoPlugin);
 
 // Include the version number.
-wtAdTracerNativoPlugin.VERSION = VERSION;
+wtAdTracerNativoPlugin.VERSION = version;
 
 export default wtAdTracerNativoPlugin;
